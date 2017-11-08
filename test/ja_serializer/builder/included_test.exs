@@ -316,13 +316,12 @@ defmodule JaSerializer.Builder.IncludedTest do
     assert not "p1" in ids
   end
 
-  test "non-existant include that is serialized into resource identifier results in no includes being added" do
-    c1 = %TestModel.Comment{id: "c1", body: "c1", author: "p1"}
-    a1 = %TestModel.Article{id: "a1", title: "a1", author: "p1", comments: [c1]}
+  test "non-existent include that is serialized into resource identifier results in no includes being added" do
+    a1 = %TestModel.Article{id: "a1", title: "a1", author: "p1"}
     
     json = JaSerializer.format(ArticleSerializer, a1, %{}, include: "author")
     keys = Map.keys(json)
     assert not "included" in keys
-    refute is_nil(json["data"]["relationships"]["author"])
+    assert json["data"]["relationships"]["author"]["data"]["id"] == "p1"
   end
 end
