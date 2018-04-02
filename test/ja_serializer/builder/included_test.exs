@@ -318,7 +318,7 @@ defmodule JaSerializer.Builder.IncludedTest do
 
   test "non-existent include that is serialized into resource identifier results in no includes being added" do
     a1 = %TestModel.Article{id: "a1", title: "a1", author: "p1"}
-    
+
     json = JaSerializer.format(ArticleSerializer, a1, %{}, include: "author")
     keys = Map.keys(json)
     assert not "included" in keys
