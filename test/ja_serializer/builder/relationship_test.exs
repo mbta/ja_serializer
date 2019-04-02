@@ -23,6 +23,21 @@ defmodule JaSerializer.Builder.RelationshipTest do
     attributes [:body]
   end
 
+  defmodule CommentWithArticleSerializer do
+    use JaSerializer
+    def id(comment, _conn), do: comment.comment_id
+    def type, do: "comments"
+    location("/comments/:id")
+    attributes([:body])
+
+    has_one(
+      :article,
+      serializer: ArticleSerializer,
+      include: false,
+      identifiers: :when_included
+    )
+  end
+
   defmodule FooSerializer do
     use JaSerializer
 
@@ -153,6 +168,17 @@ defmodule JaSerializer.Builder.RelationshipTest do
     json =
       JaSerializer.format(FooSerializer, %{baz_id: 1, id: 1}, %{},
         relationships: false
+      )
+
+    refute Map.has_key?(json["data"], "relationships")
+  end
+
+  test "empty relationships are not included" do
+    json =
+      JaSerializer.format(
+        CommentWithArticleSerializer,
+        %{comment_id: 1, article: %{title: "title"}},
+        %{}
       )
 
     refute Map.has_key?(json["data"], "relationships")
