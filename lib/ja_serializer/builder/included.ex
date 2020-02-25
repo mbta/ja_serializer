@@ -46,11 +46,11 @@ defmodule JaSerializer.Builder.Included do
   defp relationships_with_include(context) do
     context
     |> case do
-         %{relationships: relationships} -> relationships
-         %{data: data} -> context.serializer.relationships(data, context.conn)
-       end
-    |> Enum.filter(fn({rel_name, rel_definition}) ->
-      case context[:opts][:include] do
+      %{relationships: relationships} -> relationships
+      %{data: data} -> context.serializer.relationships(data, context.conn)
+    end
+    |> Enum.filter(fn {rel_name, rel_definition} ->
+      case Map.get(context.opts, :include) do
         # if `include` param is not present only return 'default' includes
         nil -> rel_definition.include == true
 
@@ -62,25 +62,31 @@ defmodule JaSerializer.Builder.Included do
 
   # Find resources for relationship & parent_context
   defp resources_for_relationship({name, definition}, context, included, known) do
-    context_opts     = context[:opts]
-    child_opts       = context_opts
-                       |> opts_with_includes_for_relation(name)
-    {cont, included} = context
-                       |> get_data(definition)
-                       |> List.wrap
-                       |> resource_objects_for(context.conn, definition.serializer, child_opts)
-                       |> Enum.reduce({[], included}, fn item, {cont, included} ->
-                         key = resource_key(item)
-                         if MapSet.member?(known, key) or Map.has_key?(included, key) do
-                           {cont, included}
-                         else
-                           {[item.data | cont], Map.put(included, key, item)}
-                         end
-                       end)
+    context_opts = context.opts
 
-    child_context = context
-    |> Map.put(:serializer, definition.serializer)
-    |> Map.put(:opts, child_opts)
+    child_opts =
+      context_opts
+      |> opts_with_includes_for_relation(name)
+
+    {cont, included} =
+      context
+      |> get_data(definition)
+      |> List.wrap()
+      |> resource_objects_for(context.conn, definition.serializer, child_opts)
+      |> Enum.reduce({[], included}, fn item, {cont, included} ->
+        key = resource_key(item)
+
+        if MapSet.member?(known, key) or Map.has_key?(included, key) do
+          {cont, included}
+        else
+          {[item.data | cont], Map.put(included, key, item)}
+        end
+      end)
+
+    child_context =
+      context
+      |> Map.put(:serializer, definition.serializer)
+      |> Map.put(:opts, child_opts)
 
     do_build(cont, child_context, included, known)
   end
@@ -93,7 +99,7 @@ defmodule JaSerializer.Builder.Included do
   defp get_data(_, %{data: data}), do: data
 
   defp opts_with_includes_for_relation(opts, rel_name) do
-    case opts[:include] do
+    case Map.get(opts, :include) do
       nil -> opts
       includes -> Map.put(opts, :include, includes[rel_name])
     end
