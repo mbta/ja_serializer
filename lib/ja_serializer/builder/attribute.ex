@@ -19,7 +19,8 @@ defmodule JaSerializer.Builder.Attribute do
   defp filter_fields(attrs, context = %{serializer: serializer, opts: opts}) do
     case Map.get(opts, :fields) do
       fields when is_map(fields) ->
-        do_filter(attrs, fields[serializer.type(context.data, context.conn)])
+        fields = Map.get(fields, serializer.type(context.data, context.conn))
+        do_filter(attrs, fields)
 
       _any ->
         attrs
