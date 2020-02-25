@@ -89,7 +89,7 @@ defmodule JaSerializer.Builder.RelationshipTest do
     c2 = %TestModel.CustomIdComment{comment_id: "c2", body: "c2"}
     a1 = %TestModel.Article{id: "a1", title: "a1", comments: [c1, c2]}
 
-    context = %{data: a1, conn: %{}, serializer: ArticleSerializer, opts: []}
+    context = %{data: a1, conn: %{}, serializer: ArticleSerializer, opts: %{}}
     primary_resource = JaSerializer.Builder.ResourceObject.build(context)
 
     %JaSerializer.Builder.ResourceObject{
@@ -143,7 +143,7 @@ defmodule JaSerializer.Builder.RelationshipTest do
       data: [1, 2, 3]
     }
 
-    context = %{conn: %{}, opts: []}
+    context = %{conn: %{}, opts: %{}}
     rel = Relationship.build({:comments, comments}, context)
     assert [_ri1, _ri2, _ri3] = rel.data
   end
@@ -155,7 +155,7 @@ defmodule JaSerializer.Builder.RelationshipTest do
       include: true
     }
 
-    context = %{conn: %{}, opts: []}
+    context = %{conn: %{}, opts: %{}}
     rel = Relationship.build({:comments, comments}, context)
     assert [_ri1, _ri2, _ri3] = rel.data
   end
@@ -167,7 +167,7 @@ defmodule JaSerializer.Builder.RelationshipTest do
       identifiers: :always
     }
 
-    context = %{conn: %{}, opts: [include: [:comments]]}
+    context = %{conn: %{}, opts: %{include: [:comments]}}
     rel = Relationship.build({:comments, comments}, context)
     assert [_ri1, _ri2, _ri3] = rel.data
   end
@@ -179,7 +179,7 @@ defmodule JaSerializer.Builder.RelationshipTest do
       identifiers: :always
     }
 
-    context = %{conn: %{}, opts: [include: [author: []]]}
+    context = %{conn: %{}, opts: %{include: [author: []]}}
     rel = Relationship.build({:comments, comments}, context)
     assert [_ri1, _ri2, _ri3] = rel.data
   end
@@ -190,7 +190,7 @@ defmodule JaSerializer.Builder.RelationshipTest do
       identifiers: :when_included
     }
 
-    context = %{conn: %{}, opts: [include: [:author]]}
+    context = %{conn: %{}, opts: %{include: [:author]}}
     rel = Relationship.build({:comments, comments}, context)
     assert is_nil(rel.data)
   end
@@ -201,7 +201,7 @@ defmodule JaSerializer.Builder.RelationshipTest do
       identifiers: :when_included
     }
 
-    context = %{conn: %{}, opts: []}
+    context = %{conn: %{}, opts: %{}}
     rel = Relationship.build({:comments, comments}, context)
     assert rel.data == nil
   end

@@ -136,7 +136,11 @@ defmodule JaSerializer.Relationship do
     quote bind_quoted: [name: name, opts: opts] do
       unless Module.defines?(__MODULE__, {name, 1}, :def) do
         def unquote(name)(struct) do
-          JaSerializer.Relationship.get_data(struct, unquote(name), unquote(opts))
+          JaSerializer.Relationship.get_data(
+            struct,
+            unquote(name),
+            unquote(opts)
+          )
         end
       end
 

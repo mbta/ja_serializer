@@ -56,7 +56,7 @@ defmodule JaSerializer.Builder.Included do
       %{data: data} -> context.serializer.relationships(data, context.conn)
     end
     |> Enum.filter(fn {rel_name, rel_definition} ->
-      case context[:opts][:include] do
+      case Map.get(context.opts, :include) do
         # if `include` param is not present only return 'default' includes
         nil ->
           rel_definition.include == true
@@ -70,7 +70,7 @@ defmodule JaSerializer.Builder.Included do
 
   # Find resources for relationship & parent_context
   defp resources_for_relationship({name, definition}, context, included, known) do
-    context_opts = context[:opts]
+    context_opts = context.opts
 
     child_opts =
       context_opts
@@ -109,7 +109,7 @@ defmodule JaSerializer.Builder.Included do
   defp get_data(_, %{data: data}), do: data
 
   defp opts_with_includes_for_relation(opts, rel_name) do
-    case opts[:include] do
+    case Map.get(opts, :include) do
       nil -> opts
       includes -> Map.put(opts, :include, includes[rel_name])
     end

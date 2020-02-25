@@ -85,7 +85,7 @@ defmodule JaSerializer.Formatter.AttributeTest do
       data: %{key_1: 1, key_2: 2, key_3: 3},
       serializer: SimpleSerializer,
       conn: nil,
-      opts: [fields: %{"simple" => "key_2,key_3"}]
+      opts: %{fields: %{"simple" => "key_2,key_3"}}
     }
 
     result = @attr.build(context)
@@ -100,7 +100,7 @@ defmodule JaSerializer.Formatter.AttributeTest do
       data: %{key_1: 1, key_2: 2, key_3: 3},
       serializer: SimpleSerializer,
       conn: nil,
-      opts: [fields: %{"simple" => [:key_2, :key_3]}]
+      opts: %{fields: %{"simple" => [:key_2, :key_3]}}
     }
 
     result = @attr.build(context)

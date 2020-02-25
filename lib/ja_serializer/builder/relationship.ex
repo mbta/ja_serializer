@@ -10,7 +10,7 @@ defmodule JaSerializer.Builder.Relationship do
   def build(
         %{serializer: serializer, data: data, conn: conn, opts: opts} = context
       ) do
-    case opts[:relationships] do
+    case Map.get(opts, :relationships) do
       false ->
         []
 
@@ -35,7 +35,7 @@ defmodule JaSerializer.Builder.Relationship do
          relationships,
          context = %{serializer: serializer, opts: opts}
        ) do
-    case opts[:fields] do
+    case Map.get(opts, :fields) do
       fields when is_map(fields) ->
         do_filter(
           relationships,
@@ -93,7 +93,7 @@ defmodule JaSerializer.Builder.Relationship do
          },
          context
        ) do
-    case context[:opts][:include] do
+    case Map.get(context.opts, :include) do
       nil -> true
       includes -> is_list(includes[name])
     end
@@ -103,7 +103,7 @@ defmodule JaSerializer.Builder.Relationship do
          %{serializer: _s, identifiers: :when_included, name: name},
          context
        ) do
-    case context[:opts][:include] do
+    case Map.get(context.opts, :include) do
       nil -> false
       includes -> is_list(includes[name])
     end

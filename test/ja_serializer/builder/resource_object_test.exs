@@ -16,7 +16,7 @@ defmodule JaSerializer.Builder.ResourceObjectTest do
   test "single resource object built correctly" do
     a1 = %TestModel.Article{id: "a1", title: "a1", body: "a1"}
 
-    context = %{data: a1, conn: %{}, serializer: ArticleSerializer, opts: []}
+    context = %{data: a1, conn: %{}, serializer: ArticleSerializer, opts: %{}}
     primary_resource = JaSerializer.Builder.ResourceObject.build(context)
 
     assert %{id: "a1", attributes: attributes} = primary_resource
@@ -39,7 +39,7 @@ defmodule JaSerializer.Builder.ResourceObjectTest do
       data: a1,
       conn: %{},
       serializer: ArticleSerializer,
-      opts: [fields: fields]
+      opts: %{fields: fields}
     }
 
     primary_resource = JaSerializer.Builder.ResourceObject.build(context)

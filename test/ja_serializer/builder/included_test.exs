@@ -114,7 +114,7 @@ defmodule JaSerializer.Builder.IncludedTest do
       comments: [c1, c2]
     }
 
-    context = %{data: a1, conn: %{}, serializer: ArticleSerializer, opts: []}
+    context = %{data: a1, conn: %{}, serializer: ArticleSerializer, opts: %{}}
     primary_resource = JaSerializer.Builder.ResourceObject.build(context)
     includes = JaSerializer.Builder.Included.build(context, primary_resource)
 
@@ -144,7 +144,7 @@ defmodule JaSerializer.Builder.IncludedTest do
       comments: [c1, c2]
     }
 
-    context = %{data: a1, conn: %{}, serializer: ArticleSerializer, opts: []}
+    context = %{data: a1, conn: %{}, serializer: ArticleSerializer, opts: %{}}
     primary_resource = JaSerializer.Builder.ResourceObject.build(context)
     includes = JaSerializer.Builder.Included.build(context, primary_resource)
 
@@ -182,7 +182,7 @@ defmodule JaSerializer.Builder.IncludedTest do
           data: a1,
           conn: %{},
           serializer: DeprecatedArticleSerializer,
-          opts: []
+          opts: %{}
         }
 
         primary_resource = JaSerializer.Builder.ResourceObject.build(context)
@@ -367,7 +367,7 @@ defmodule JaSerializer.Builder.IncludedTest do
     a1 = %TestModel.Article{id: "a1", title: "a1", body: "a1", author: p1}
 
     fields = %{"articles" => "title", "people" => "first_name"}
-    opts = [fields: fields]
+    opts = %{fields: fields}
     context = %{data: a1, conn: %{}, serializer: ArticleSerializer, opts: opts}
     primary_resource = JaSerializer.Builder.ResourceObject.build(context)
     includes = JaSerializer.Builder.Included.build(context, primary_resource)
@@ -398,7 +398,7 @@ defmodule JaSerializer.Builder.IncludedTest do
     a1 = %TestModel.Article{id: "a1", title: "a1", body: "a1", author: p1}
 
     fields = %{"articles" => "title"}
-    opts = [fields: fields]
+    opts = %{fields: fields}
     context = %{data: a1, conn: %{}, serializer: ArticleSerializer, opts: opts}
     primary_resource = JaSerializer.Builder.ResourceObject.build(context)
     includes = JaSerializer.Builder.Included.build(context, primary_resource)

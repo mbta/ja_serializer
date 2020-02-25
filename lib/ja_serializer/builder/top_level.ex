@@ -20,8 +20,11 @@ defmodule JaSerializer.Builder.TopLevel do
     end
   end
 
-  def build(%{data: records, conn: conn, serializer: serializer} = context) do
-    opts = normalize_opts(context[:opts])
+  def build(
+        %{data: records, conn: conn, serializer: serializer, opts: opts} =
+          context
+      ) do
+    opts = normalize_opts(opts)
 
     context =
       context
@@ -37,18 +40,18 @@ defmodule JaSerializer.Builder.TopLevel do
     |> Map.put(:data, data)
     |> add_included(context)
     |> add_pagination_links(context)
-    |> add_meta(context[:opts][:meta])
+    |> add_meta(Map.get(context.opts, :meta))
   end
 
   defp add_included(tl, %{opts: opts} = context) do
-    case opts[:relationships] do
+    case Map.get(opts, :relationships) do
       false -> tl
       _ -> Map.put(tl, :included, Included.build(context, tl.data))
     end
   end
 
   defp add_pagination_links(tl, context) do
-    links = pagination_links(context.opts[:page], context)
+    links = pagination_links(Map.get(context.opts, :page), context)
     Map.update(tl, :links, links, &(&1 ++ links))
   end
 
@@ -64,7 +67,7 @@ defmodule JaSerializer.Builder.TopLevel do
   defp normalize_opts(opts) do
     opts = Enum.into(opts, %{})
 
-    case opts[:include] do
+    case Map.get(opts, :include) do
       nil -> opts
       includes -> Map.put(opts, :include, Utils.normalize_includes(includes))
     end
