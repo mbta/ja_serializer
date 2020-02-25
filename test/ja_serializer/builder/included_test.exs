@@ -483,7 +483,7 @@ defmodule JaSerializer.Builder.IncludedTest do
 
     json = JaSerializer.format(ArticleSerializer, a1, %{}, include: "author")
     keys = Map.keys(json)
-    assert not "included" in keys
+    assert "included" not in keys
     assert json["data"]["relationships"]["author"]["data"]["id"] == "p1"
   end
 end
