@@ -34,10 +34,12 @@ defmodule JaSerializer.Formatter.AttributeTest do
   end
 
   test "the correct keys are filtered out with build" do
-    context = %{data: %{key_1: 1, key_2: 2, key_3: 3},
-                serializer: SimpleSerializer,
-                conn: nil,
-                opts: [fields: %{"simple"=>"key_2,key_3"}]}
+    context = %{
+      data: %{key_1: 1, key_2: 2, key_3: 3},
+      serializer: SimpleSerializer,
+      conn: nil,
+      opts: %{fields: %{"simple" => "key_2,key_3"}}
+    }
 
     result = @attr.build(context)
 
@@ -47,10 +49,12 @@ defmodule JaSerializer.Formatter.AttributeTest do
   end
 
   test "the correct keys are are filtered when given a list" do
-    context = %{data: %{key_1: 1, key_2: 2, key_3: 3},
-                serializer: SimpleSerializer,
-                conn: nil,
-                opts: [fields: %{"simple"=>[:key_2, :key_3]}]}
+    context = %{
+      data: %{key_1: 1, key_2: 2, key_3: 3},
+      serializer: SimpleSerializer,
+      conn: nil,
+      opts: %{fields: %{"simple" => [:key_2, :key_3]}}
+    }
 
     result = @attr.build(context)
 

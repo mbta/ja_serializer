@@ -7,7 +7,7 @@ defmodule JaSerializer.Builder.Relationship do
   defstruct [:name, :links, :data, :meta]
 
   def build(%{serializer: serializer, data: data, conn: conn, opts: opts} = context) do
-    case opts[:relationships] do
+    case Map.get(opts, :relationships) do
       false -> []
       _ -> Enum.map serializer.relationships(data, conn), &(build(&1, context))
     end
@@ -44,13 +44,13 @@ defmodule JaSerializer.Builder.Relationship do
   defp should_have_identifiers?(%{serializer: _s, identifiers: :always}, _c),
     do: true
   defp should_have_identifiers?(%{serializer: _s, identifiers: :when_included, name: name, include: true}, context) do
-    case context[:opts][:include] do
+    case Map.get(context.opts, :include) do
       nil  -> true
       includes -> is_list(includes[name])
     end
   end
   defp should_have_identifiers?(%{serializer: _s, identifiers: :when_included, name: name}, context) do
-    case context[:opts][:include] do
+    case Map.get(context.opts, :include) do
       nil  -> false
       includes -> is_list(includes[name])
     end
