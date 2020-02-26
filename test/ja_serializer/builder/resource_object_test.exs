@@ -15,7 +15,7 @@ defmodule JaSerializer.Builder.ResourceObjectTest do
     primary_resource = JaSerializer.Builder.ResourceObject.build(context)
 
     assert %{id: "a1", attributes: attributes} = primary_resource
-    assert [_,_] = attributes
+    assert [_, _] = attributes
 
     # Formatted
     json = JaSerializer.format(ArticleSerializer, a1)

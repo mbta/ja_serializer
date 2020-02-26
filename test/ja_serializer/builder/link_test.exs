@@ -30,7 +30,11 @@ defmodule JaSerializer.Builder.LinkTest do
     primary_resource = JaSerializer.Builder.ResourceObject.build(context)
 
     %JaSerializer.Builder.ResourceObject{
-      relationships: [%JaSerializer.Builder.Relationship{:links => [%JaSerializer.Builder.Link{href: href}]}]
+      relationships: [
+        %JaSerializer.Builder.Relationship{
+          :links => [%JaSerializer.Builder.Link{href: href}]
+        }
+      ]
     } = primary_resource
 
     assert href == "comments?article_id=a1"
@@ -45,7 +49,11 @@ defmodule JaSerializer.Builder.LinkTest do
     primary_resource = JaSerializer.Builder.ResourceObject.build(context)
 
     %JaSerializer.Builder.ResourceObject{
-      relationships: [%JaSerializer.Builder.Relationship{:links => [%JaSerializer.Builder.Link{href: href}]}]
+      relationships: [
+        %JaSerializer.Builder.Relationship{
+          :links => [%JaSerializer.Builder.Link{href: href}]
+        }
+      ]
     } = primary_resource
 
     assert href == "articles/a1/comments"
