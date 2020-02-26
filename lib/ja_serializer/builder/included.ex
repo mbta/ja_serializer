@@ -40,12 +40,13 @@ defmodule JaSerializer.Builder.Included do
     do_build(structs, context, included, known)
   end
 
-  defp resource_objects_for(structs, conn, serializer, opts) do
-    structs = Enum.filter(structs, &is_map/1)
-
-    %{data: structs, conn: conn, serializer: serializer, opts: opts}
-    |> ResourceObject.build()
-    |> List.wrap()
+  defp resource_object_for(structs, conn, serializer, opts) do
+    ResourceObject.build(%{
+      data: structs,
+      conn: conn,
+      serializer: serializer,
+      opts: opts
+    })
   end
 
   # Find relationships that should be included.
@@ -77,14 +78,28 @@ defmodule JaSerializer.Builder.Included do
       context
       |> get_data(definition)
       |> List.wrap()
-      |> resource_objects_for(context.conn, definition.serializer, child_opts)
       |> Enum.reduce({[], included}, fn item, {cont, included} ->
-        key = resource_key(item)
+        if is_map(item) do
+          key =
+            {definition.serializer.id(item, context.conn),
+             definition.serializer.type(item, context.conn)}
 
-        if MapSet.member?(known, key) or Map.has_key?(included, key) do
-          {cont, included}
+          if MapSet.member?(known, key) or Map.has_key?(included, key) do
+            {cont, included}
+          else
+            # only build a resource if we haven't seen the item before
+            item =
+              resource_object_for(
+                item,
+                context.conn,
+                definition.serializer,
+                child_opts
+              )
+
+            {[item.data | cont], Map.put(included, key, item)}
+          end
         else
-          {[item.data | cont], Map.put(included, key, item)}
+          {cont, included}
         end
       end)
 
